@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información del Streamer - El Continental</title>
+    <link rel="stylesheet" href="styles.css">    <script src="session.js"></script>
+</head>
+<body>
+    <header>
+        <div class="auth-buttons">
+            <button class="btn-auth btn-login">Iniciar Sesión</button>
+            <button class="btn-auth btn-register">Registrarse</button>
+        </div>
+        <div class="logo-container">
+            <div class="logo-background"></div>
+            <img src="assets/logo de pagina .jpg" alt="Logo El Continental" class="logo">
+            <div class="logo-ring"></div>
+            <div class="logo-particles"></div>
+        </div>
+        <h1>El Continental</h1>
+        <p class="subtitle">Información del Streamer</p>
+    </header>
+    
+    <nav class="navbar">
+        <div class="navbar-container">
+            <button class="navbar-toggle" id="navbar-toggle">
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+            </button>
+            <ul class="navbar-menu" id="navbar-menu">
+                <li class="navbar-item">
+                    <a href="podium.html" class="navbar-link">
+                        <span class="navbar-icon">🏆</span>
+                        Podium
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="ranking.html" class="navbar-link">
+                        <span class="navbar-icon">📊</span>
+                        Ranking
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="clanes.html" class="navbar-link">
+                        <span class="navbar-icon">⚔️</span>
+                        Clanes
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="salas.html" class="navbar-link">
+                        <span class="navbar-icon">🎮</span>
+                        Salas
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="perfil.html" class="navbar-link">
+                        <span class="navbar-icon">👤</span>
+                        Perfil
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <section class="page-content">
+            <h2>📹 Streamers de la Comunidad</h2>
+            <p>Conoce a los streamers oficiales de El Continental:</p>
+            
+            <!-- Contenedor para streamers dinámicos -->
+            <div id="streamers-dinamicos" class="streamers-grid">
+                <p>Cargando información de streamers...</p>
+            </div>
+            
+            <div class="back-home-container">
+                <a href="index.html" class="btn back-home-btn">🏠 Volver al Inicio</a>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 El Continental. No oficial de Call of Duty Mobile.</p>
+    </footer>
+
+    <script>
+        const navbarToggle = document.getElementById('navbar-toggle');
+        const navbarMenu = document.getElementById('navbar-menu');
+        
+        navbarToggle.addEventListener('click', () => {
+            navbarToggle.classList.toggle('active');
+            navbarMenu.classList.toggle('active');
+        });
+        
+        const navbarLinks = document.querySelectorAll('.navbar-link');
+        navbarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            });
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!navbarToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
+

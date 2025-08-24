@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Clan - El Continental</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="session.js"></script>
+    <script src="content-loader.js"></script>
+</head>
+<body>
+    <header>
+        <div class="auth-buttons">
+            <button class="btn-auth btn-login">Iniciar Sesión</button>
+            <button class="btn-auth btn-register">Registrarse</button>
+        </div>
+        <div class="logo-container">
+            <div class="logo-background"></div>
+            <img src="assets/logo de pagina .jpg" alt="Logo El Continental" class="logo">
+            <div class="logo-ring"></div>
+            <div class="logo-particles"></div>
+        </div>
+        <h1>El Continental</h1>
+        <p class="subtitle">Registrar Clan</p>
+    </header>
+    
+    <nav class="navbar">
+        <div class="navbar-container">
+            <button class="navbar-toggle" id="navbar-toggle">
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+            </button>
+            <ul class="navbar-menu" id="navbar-menu">
+                <li class="navbar-item">
+                    <a href="podium.html" class="navbar-link">
+                        <span class="navbar-icon">🏆</span>
+                        Podium
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="ranking.html" class="navbar-link">
+                        <span class="navbar-icon">📊</span>
+                        Ranking
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="clanes.html" class="navbar-link">
+                        <span class="navbar-icon">⚔️</span>
+                        Clanes
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="salas.html" class="navbar-link">
+                        <span class="navbar-icon">🎮</span>
+                        Salas
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="perfil.html" class="navbar-link">
+                        <span class="navbar-icon">👤</span>
+                        Perfil
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <section class="page-content">
+            <h2>⚔️ Registrar Nuevo Clan</h2>
+            <p>Solicita el registro de tu clan en la comunidad El Continental:</p>
+            
+            <form id="register-clan-form" class="clan-form">
+                <div class="form-group">
+                    <label for="clan-name">Nombre del Clan:</label>
+                    <input type="text" id="clan-name" name="clan-name" required placeholder="Ej: Los Guerreros">
+                </div>
+
+                <div class="form-group">
+                    <label for="clan-tag">Tag del Clan (3-5 letras):</label>
+                    <input type="text" id="clan-tag" name="clan-tag" maxlength="5" required placeholder="Ej: [GWR]">
+                </div>
+
+                <div class="form-group">
+                    <label for="clan-leader">Líder del Clan:</label>
+                    <input type="text" id="clan-leader" name="clan-leader" required placeholder="Tu nombre de usuario">
+                </div>
+
+                <div class="form-group">
+                    <label for="clan-description">Descripción del Clan:</label>
+                    <textarea id="clan-description" name="clan-description" rows="4" required placeholder="Describe tu clan, objetivos, requisitos, etc."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="clan-type">Tipo de Clan:</label>
+                    <select id="clan-type" name="clan-type" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="competitivo">Competitivo</option>
+                        <option value="casual">Casual</option>
+                        <option value="profesional">Profesional</option>
+                        <option value="mixto">Mixto</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="clan-logo">URL del Logo (opcional):</label>
+                    <input type="url" id="clan-logo" name="clan-logo" placeholder="https://ejemplo.com/logo.png">
+                </div>
+
+                <div class="form-group">
+                    <label for="clan-max-members">Máximo de Miembros:</label>
+                    <select id="clan-max-members" name="clan-max-members" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="10">10 miembros</option>
+                        <option value="15">15 miembros</option>
+                        <option value="20">20 miembros</option>
+                        <option value="25">25 miembros</option>
+                        <option value="30">30 miembros</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact-info">Información de Contacto:</label>
+                    <input type="text" id="contact-info" name="contact-info" required placeholder="Discord, WhatsApp, etc.">
+                </div>
+
+                <button type="submit" class="btn submit-btn">📤 Enviar Solicitud</button>
+            </form>
+
+            <div class="back-home-container">
+                <a href="clanes.html" class="btn">⚔️ Ver Clanes Existentes</a>
+                <a href="index.html" class="btn back-home-btn">🏠 Volver al Inicio</a>
+            </div>
+        </section>
+    </main>
+
+            <footer>
+        <p>&copy; 2025 El Continental. No oficial de Call of Duty Mobile.</p>
+    </footer>
+
+    <script>
+        const navbarToggle = document.getElementById('navbar-toggle');
+        const navbarMenu = document.getElementById('navbar-menu');
+        
+        navbarToggle.addEventListener('click', () => {
+            navbarToggle.classList.toggle('active');
+            navbarMenu.classList.toggle('active');
+        });
+        
+        const navbarLinks = document.querySelectorAll('.navbar-link');
+        navbarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            });
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!navbarToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            }
+        });
+
+        // Manejar el envío del formulario de registro de clan
+        document.getElementById('register-clan-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Obtener datos del formulario
+            const solicitudClan = {
+                id: Date.now(),
+                nombre: document.getElementById('clan-name').value,
+                tag: document.getElementById('clan-tag').value,
+                lider: document.getElementById('clan-leader').value,
+                descripcion: document.getElementById('clan-description').value,
+                tipo: document.getElementById('clan-type').value,
+                logo: document.getElementById('clan-logo').value,
+                maxMiembros: document.getElementById('clan-max-members').value,
+                contacto: document.getElementById('contact-info').value,
+                fechaSolicitud: new Date().toLocaleString('es-ES'),
+                estado: 'pendiente',
+                solicitante: getCurrentUser() || 'Usuario Anónimo'
+            };
+
+            // Guardar en localStorage para que el admin la vea
+            let solicitudesClan = JSON.parse(localStorage.getItem('solicitudesClan') || '[]');
+            solicitudesClan.push(solicitudClan);
+            localStorage.setItem('solicitudesClan', JSON.stringify(solicitudesClan));
+
+            // Mostrar mensaje de éxito
+            alert('¡Solicitud enviada exitosamente! El administrador revisará tu solicitud y te contactará pronto.');
+            
+            // Limpiar el formulario
+            document.getElementById('register-clan-form').reset();
+        });
+
+        // Función auxiliar para obtener el usuario actual
+        function getCurrentUser() {
+            const user = localStorage.getItem('currentUser');
+            return user ? JSON.parse(user).username : null;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - El Continental</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos específicos para formularios de admin */
+        .admin-form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4caf50;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+
+        .existing-content {
+            margin-top: 2rem;
+        }
+
+        .existing-content h4 {
+            color: #4caf50;
+            margin-bottom: 1rem;
+        }
+
+        .content-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            padding: 1rem;
+        }
+
+        .content-item {
+            background: rgba(76, 175, 80, 0.1);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            border-left: 3px solid #4caf50;
+        }
+
+        .content-item h5 {
+            margin: 0 0 0.5rem 0;
+            color: #4caf50;
+        }
+
+        .content-item p {
+            margin: 0.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .delete-btn:hover {
+            background: #d32f2f;
+        }
+
+        /* Estilos para solicitudes de clan */
+        .solicitudes-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-mini {
+            background: rgba(76, 175, 80, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .stat-mini .stat-label {
+            display: block;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-mini .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4caf50;
+        }
+
+        .solicitudes-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: #4caf50;
+        }
+
+        .filter-btn.active {
+            background: #4caf50;
+            border-color: #4caf50;
+            color: white;
+        }
+
+        .solicitudes-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .solicitud-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .solicitud-item:hover {
+            border-color: #4caf50;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
+        }
+
+        .solicitud-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .solicitud-title {
+            color: #4caf50;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .solicitud-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .solicitud-status.pendiente {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .solicitud-status.aprobada {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+
+        .solicitud-status.rechazada {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid #f44336;
+        }
+
+        .solicitud-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .solicitud-field {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.75rem;
+            border-radius: 5px;
+        }
+
+        .solicitud-field strong {
+            color: #4caf50;
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .solicitud-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-aprobar {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-aprobar:hover {
+            background: linear-gradient(135deg, #45a049 0%, #4caf50 100%);
+            transform: translateY(-1px);
+        }
+
+        .btn-rechazar {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-rechazar:hover {
+            background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+            transform: translateY(-1px);
+        }
+
+        .btn-eliminar-solicitud {
+            background: linear-gradient(135deg, #757575 0%, #616161 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-eliminar-solicitud:hover {
+            background: linear-gradient(135deg, #616161 0%, #757575 100%);
+            transform: translateY(-1px);
+        }
+    </style>
+    <script src="session.js"></script>
+    <script src="content-loader.js"></script>
+</head>
+<body>
+    <header>
+        <div class="auth-buttons">
+            <a href="login.html" class="btn-auth btn-login">Iniciar Sesión</a>
+            <a href="registro.html" class="btn-auth btn-register">Registrarse</a>
+        </div>
+        <div class="logo-container">
+            <div class="logo-background"></div>
+            <img src="assets/logo de pagina .jpg" alt="Logo El Continental" class="logo">
+            <div class="logo-ring"></div>
+            <div class="logo-particles"></div>
+        </div>
+        <h1>El Continental</h1>
+        <p class="subtitle">Panel de Administración</p>
+    </header>
+    
+    <nav class="navbar">
+        <div class="navbar-container">
+            <button class="navbar-toggle" id="navbar-toggle">
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+            </button>
+            <ul class="navbar-menu" id="navbar-menu">
+                <li class="navbar-item">
+                    <a href="podium.html" class="navbar-link">
+                        <span class="navbar-icon">🏆</span>
+                        Podium
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="ranking.html" class="navbar-link">
+                        <span class="navbar-icon">📊</span>
+                        Ranking
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="clanes.html" class="navbar-link">
+                        <span class="navbar-icon">⚔️</span>
+                        Clanes
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="salas.html" class="navbar-link">
+                        <span class="navbar-icon">🎮</span>
+                        Salas
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="perfil.html" class="navbar-link">
+                        <span class="navbar-icon">👤</span>
+                        Perfil
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <section class="page-content">
+            <div class="admin-container">
+                <h2>⚙️ Panel de Administración</h2>
+                
+                <!-- Admin Login -->
+                <div class="admin-login" id="adminLogin">
+                    <h3>🔐 Acceso de Administrador</h3>
+                    <form id="adminAuthForm">
+                        <div class="form-group">
+                            <label for="adminUser">Usuario Admin:</label>
+                            <input type="text" id="adminUser" required placeholder="admin">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminPass">Contraseña Admin:</label>
+                            <input type="password" id="adminPass" required placeholder="admin123">
+                        </div>
+                        <button type="submit" class="btn auth-submit-btn">Acceder</button>
+                    </form>
+                </div>
+                
+                <!-- Admin Dashboard -->
+                <div class="admin-dashboard" id="adminDashboard" style="display: none;">
+                    <!-- Stats Cards -->
+                    <div class="stats-cards-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">🛡️</div>
+                            <div class="stat-info">
+                                <div class="stat-number">0</div>
+                                <div class="stat-label">Clanes Totales</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-info">
+                                <div class="stat-number">2</div>
+                                <div class="stat-label">Usuarios Registrados</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">🎮</div>
+                            <div class="stat-info">
+                                <div class="stat-number">2</div>
+                                <div class="stat-label">Salas Activas</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">🖼️</div>
+                            <div class="stat-info">
+                                <div class="stat-number">0</div>
+                                <div class="stat-label">Items en Galería</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Section Header -->
+                    <div class="section-header">
+                        <span class="section-indicator">●</span>
+                        <span class="section-title">Sección Activa: <strong>Gestión de Clanes</strong></span>
+                        <div class="nav-arrows">
+                            <button class="nav-arrow" onclick="previousSection()">❮</button>
+                            <span>navegar</span>
+                            <button class="nav-arrow" onclick="nextSection()">❯</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Navigation Tabs -->
+                    <div class="admin-nav-tabs">
+                        <button class="nav-tab active" data-section="clanes" onclick="showSection('clanes')">
+                            <span class="nav-icon">�️</span>
+                            <span>Clanes</span>
+                        </button>
+                        <button class="nav-tab" data-section="puntos" onclick="showSection('puntos')">
+                            <span class="nav-icon">🏆</span>
+                            <span>Puntos</span>
+                        </button>
+                        <button class="nav-tab" data-section="usuarios" onclick="showSection('usuarios')">
+                            <span class="nav-icon">👥</span>
+                            <span>Usuarios</span>
+                        </button>
+                        <button class="nav-tab" data-section="salas" onclick="showSection('salas')">
+                            <span class="nav-icon">🎮</span>
+                            <span>Salas</span>
+                        </button>
+                        <button class="nav-tab" data-section="podium" onclick="showSection('podium')">
+                            <span class="nav-icon">🏆</span>
+                            <span>Podium</span>
+                        </button>
+                        <button class="nav-tab" data-section="galeria" onclick="showSection('galeria')">
+                            <span class="nav-icon">🖼️</span>
+                            <span>Galería</span>
+                        </button>
+                        <button class="nav-tab" data-section="streamers" onclick="showSection('streamers')">
+                            <span class="nav-icon">�</span>
+                            <span>Streamers</span>
+                        </button>
+                        <button class="nav-tab" data-section="solicitudes" onclick="showSection('solicitudes')">
+                            <span class="nav-icon">👤</span>
+                            <span>Solicitudes</span>
+                        </button>
+                        <button class="nav-tab" data-section="solicitudes-clan" onclick="showSection('solicitudes-clan')">
+                            <span class="nav-icon">📋</span>
+                            <span>Solicitudes Clan</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Content Sections -->
+                    <div class="admin-content">
+                        <!-- Clanes Section -->
+                        <div id="clanes" class="content-section active">
+                            <h3>⚔️ Gestión de Clanes</h3>
+                            <div class="clanes-management">
+                                <form id="clanesForm" class="admin-form">
+                                    <div class="form-group">
+                                        <label for="clanNombre">Nombre del Clan:</label>
+                                        <input type="text" id="clanNombre" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="clanTag">Tag del Clan:</label>
+                                        <input type="text" id="clanTag" maxlength="6" placeholder="[TAG]" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="clanLider">Líder del Clan:</label>
+                                        <input type="text" id="clanLider" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="clanDescripcion">Descripción:</label>
+                                        <textarea id="clanDescripcion" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="clanLogo">URL del Logo:</label>
+                                        <input type="url" id="clanLogo" placeholder="https://ejemplo.com/logo.png">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="clanTipo">Tipo de Clan:</label>
+                                        <select id="clanTipo" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="competitivo">Competitivo</option>
+                                            <option value="casual">Casual</option>
+                                            <option value="profesional">Profesional</option>
+                                            <option value="mixto">Mixto</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="clanMaxMiembros">Máximo de Miembros:</label>
+                                        <input type="number" id="clanMaxMiembros" min="5" max="50" value="20" required>
+                                    </div>
+                                    <button type="submit" class="btn">Crear Clan</button>
+                                </form>
+                                
+                                <div class="existing-content">
+                                    <h4>Clanes Registrados:</h4>
+                                    <div id="clanesList" class="content-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Usuarios Section -->
+                        <div id="usuarios" class="content-section">
+                            <h3>� Usuarios Registrados</h3>
+                            <div class="data-table">
+                                <table id="usuariosTable">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Usuario</th>
+                                            <th>Email</th>
+                                            <th>Fecha Registro</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>001</td>
+                                            <td>TestUser1</td>
+                                            <td>test@example.com</td>
+                                            <td>21/08/2025 10:30</td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td>
+                                                <button class="btn-small edit">Editar</button>
+                                                <button class="btn-small delete">Eliminar</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Puntos Section -->
+                        <div id="puntos" class="content-section">
+                            <h3>🏆 Sistema de Rankings</h3>
+                            <div class="ranking-management">
+                                <form id="rankingForm" class="admin-form">
+                                    <div class="form-group">
+                                        <label for="rankingJugador">Nombre del Jugador:</label>
+                                        <input type="text" id="rankingJugador" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="rankingPuntos">Puntos Totales:</label>
+                                        <input type="number" id="rankingPuntos" min="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="rankingKD">K/D Ratio:</label>
+                                        <input type="number" id="rankingKD" step="0.01" min="0" placeholder="1.50" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="rankingNivel">Nivel/Rango:</label>
+                                        <select id="rankingNivel" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="Rookie">Rookie</option>
+                                            <option value="Veteran">Veteran</option>
+                                            <option value="Elite">Elite</option>
+                                            <option value="Pro">Pro</option>
+                                            <option value="Master">Master</option>
+                                            <option value="Grandmaster">Grandmaster</option>
+                                            <option value="Legendary">Legendary</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="rankingPartidas">Partidas Jugadas:</label>
+                                        <input type="number" id="rankingPartidas" min="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="rankingVictorias">Victorias:</label>
+                                        <input type="number" id="rankingVictorias" min="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="rankingClan">Clan (opcional):</label>
+                                        <input type="text" id="rankingClan" placeholder="Nombre del clan">
+                                    </div>
+                                    <button type="submit" class="btn">Agregar/Actualizar Ranking</button>
+                                </form>
+                                
+                                <div class="existing-content">
+                                    <h4>Rankings Actuales:</h4>
+                                    <div id="rankingList" class="content-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Salas Section -->
+                        <div id="salas" class="content-section">
+                            <h3>🎮 Gestión de Salas</h3>
+                            <div class="rooms-management">
+                                <form id="salasForm" class="admin-form">
+                                    <div class="form-group">
+                                        <label for="salaNombre">Nombre de la Sala:</label>
+                                        <input type="text" id="salaNombre" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="salaDescripcion">Descripción:</label>
+                                        <textarea id="salaDescripcion" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="salaJuego">Juego/Modo:</label>
+                                        <select id="salaJuego" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="BR">Battle Royale</option>
+                                            <option value="MP">Multijugador</option>
+                                            <option value="RANKED">Ranked</option>
+                                            <option value="CUSTOM">Personalizada</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="salaMaxJugadores">Máximo Jugadores:</label>
+                                        <input type="number" id="salaMaxJugadores" min="2" max="100" required>
+                                    </div>
+                                    <button type="submit" class="btn">Crear Sala</button>
+                                </form>
+                                
+                                <div class="existing-content">
+                                    <h4>Salas Activas:</h4>
+                                    <div id="salasList" class="content-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Podium Section -->
+                        <div id="podium" class="content-section">
+                            <h3>🏆 Gestión del Podium</h3>
+                            <div class="podium-management">
+                                <form id="podiumForm" class="admin-form">
+                                    <div class="form-group">
+                                        <label for="podiumJugador">Nombre del Jugador:</label>
+                                        <input type="text" id="podiumJugador" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="podiumPosicion">Posición:</label>
+                                        <select id="podiumPosicion" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="1">🥇 Primer Lugar</option>
+                                            <option value="2">🥈 Segundo Lugar</option>
+                                            <option value="3">🥉 Tercer Lugar</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="podiumTorneo">Torneo/Evento:</label>
+                                        <input type="text" id="podiumTorneo" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="podiumPuntos">Puntos Obtenidos:</label>
+                                        <input type="number" id="podiumPuntos" min="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="podiumFecha">Fecha del Evento:</label>
+                                        <input type="date" id="podiumFecha" required>
+                                    </div>
+                                    <button type="submit" class="btn">Agregar al Podium</button>
+                                </form>
+                                
+                                <div class="existing-content">
+                                    <h4>Podium Actual:</h4>
+                                    <div id="podiumList" class="content-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Galería Section -->
+                        <div id="galeria" class="content-section">
+                            <h3>🖼️ Gestión de Galería</h3>
+                            <div class="gallery-management">
+                                <form id="galeriaForm" class="admin-form">
+                                    <div class="form-group">
+                                        <label for="galeriaTitulo">Título de la Imagen/Video:</label>
+                                        <input type="text" id="galeriaTitulo" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="galeriaDescripcion">Descripción:</label>
+                                        <textarea id="galeriaDescripcion" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="galeriaCategoria">Categoría:</label>
+                                        <select id="galeriaCategoria" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="competitivo">Competitivo</option>
+                                            <option value="amateur">Amateur</option>
+                                            <option value="eventos">Eventos</option>
+                                            <option value="highlights">Highlights</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="galeriaURL">URL de la Imagen/Video:</label>
+                                        <input type="url" id="galeriaURL" placeholder="https://ejemplo.com/imagen.jpg" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="galeriaTipo">Tipo de Contenido:</label>
+                                        <select id="galeriaTipo" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="imagen">Imagen</option>
+                                            <option value="video">Video</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn">Agregar a Galería</button>
+                                </form>
+                                
+                                <div class="existing-content">
+                                    <h4>Contenido de Galería:</h4>
+                                    <div id="galeriaList" class="content-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Streamers Section -->
+                        <div id="streamers" class="content-section">
+                            <h3>📹 Gestión de Streamers</h3>
+                            <div class="streamers-management">
+                                <form id="streamersForm" class="admin-form">
+                                    <div class="form-group">
+                                        <label for="streamerNombre">Nombre del Streamer:</label>
+                                        <input type="text" id="streamerNombre" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="streamerDescripcion">Descripción/Bio:</label>
+                                        <textarea id="streamerDescripcion" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="streamerPlataforma">Plataforma Principal:</label>
+                                        <select id="streamerPlataforma" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="twitch">Twitch</option>
+                                            <option value="youtube">YouTube</option>
+                                            <option value="facebook">Facebook Gaming</option>
+                                            <option value="tiktok">TikTok</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="streamerURL">URL del Canal:</label>
+                                        <input type="url" id="streamerURL" placeholder="https://twitch.tv/usuario" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="streamerHorario">Horario de Stream:</label>
+                                        <input type="text" id="streamerHorario" placeholder="Ej: Lun-Vie 8PM-12AM">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="streamerAvatar">URL del Avatar:</label>
+                                        <input type="url" id="streamerAvatar" placeholder="https://ejemplo.com/avatar.jpg">
+                                    </div>
+                                    <button type="submit" class="btn">Agregar Streamer</button>
+                                </form>
+                                
+                                <div class="existing-content">
+                                    <h4>Streamers de la Comunidad:</h4>
+                                    <div id="streamersList" class="content-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Solicitudes Section -->
+                        <div id="solicitudes" class="content-section">
+                            <h3>👤 Solicitudes y Registros</h3>
+                            <div class="data-table">
+                                <table id="loginsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha/Hora</th>
+                                            <th>Usuario</th>
+                                            <th>Tipo</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>21/08/2025 11:45</td>
+                                            <td>TestUser1</td>
+                                            <td>Login</td>
+                                            <td><span class="status success">Exitoso</span></td>
+                                            <td><button class="btn-small view">Ver</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Solicitudes de Clan Section -->
+                        <div id="solicitudes-clan" class="content-section">
+                            <h3>📋 Solicitudes de Registro de Clanes</h3>
+                            <div class="solicitudes-clan-management">
+                                <div class="solicitudes-stats">
+                                    <div class="stat-mini">
+                                        <span class="stat-label">Pendientes:</span>
+                                        <span id="pendientes-count" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-mini">
+                                        <span class="stat-label">Aprobadas:</span>
+                                        <span id="aprobadas-count" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-mini">
+                                        <span class="stat-label">Rechazadas:</span>
+                                        <span id="rechazadas-count" class="stat-value">0</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="solicitudes-filters">
+                                    <button class="filter-btn active" onclick="filterSolicitudes('all')">Todas</button>
+                                    <button class="filter-btn" onclick="filterSolicitudes('pendiente')">Pendientes</button>
+                                    <button class="filter-btn" onclick="filterSolicitudes('aprobada')">Aprobadas</button>
+                                    <button class="filter-btn" onclick="filterSolicitudes('rechazada')">Rechazadas</button>
+                                </div>
+                                
+                                <div id="solicitudesClanList" class="solicitudes-list">
+                                    <p>Cargando solicitudes...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn logout-btn" onclick="adminLogout()">🚪 Cerrar Sesión Admin</button>
+                </div>
+            </div>
+            
+            <div class="back-home-container">
+                <a href="index.html" class="btn back-home-btn">🏠 Volver al Inicio</a>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 El Continental. No oficial de Call of Duty Mobile.</p>
+    </footer>
+
+    <script>
+        const navbarToggle = document.getElementById('navbar-toggle');
+        const navbarMenu = document.getElementById('navbar-menu');
+        
+        navbarToggle.addEventListener('click', () => {
+            navbarToggle.classList.toggle('active');
+            navbarMenu.classList.toggle('active');
+        });
+        
+        const navbarLinks = document.querySelectorAll('.navbar-link');
+        navbarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            });
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!navbarToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            }
+        });
+
+        // Check if user is already admin when page loads
+        window.addEventListener('load', function() {
+            if (isUserAdmin()) {
+                // User is already logged in as admin, skip login and show dashboard
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadAdminData();
+            } else if (isUserLoggedIn()) {
+                // User is logged in but not admin
+                alert('Acceso denegado. Solo los administradores pueden acceder a esta página.');
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Admin Authentication
+        document.getElementById('adminAuthForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+            
+            // Simple authentication (in production, this should be secure)
+            if (user === 'admin' && pass === 'admin123') {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadAdminData();
+            } else {
+                alert('Credenciales incorrectas');
+            }
+        });
+
+        // Tab functionality - Updated for new design
+        function showSection(sectionName) {
+            // Hide all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionName);
+            const targetTab = document.querySelector(`[data-section="${sectionName}"]`);
+            
+            if (targetSection) targetSection.classList.add('active');
+            if (targetTab) targetTab.classList.add('active');
+            
+            // Update section header
+            updateSectionHeader(sectionName);
+        }
+
+        // Update section header
+        function updateSectionHeader(sectionName) {
+            const sectionNames = {
+                'clanes': 'Gestión de Clanes',
+                'puntos': 'Sistema de Puntos',
+                'usuarios': 'Gestión de Usuarios',
+                'salas': 'Gestión de Salas',
+                'podium': 'Gestión del Podium',
+                'galeria': 'Gestión de Galería',
+                'streamers': 'Gestión de Streamers',
+                'solicitudes': 'Solicitudes y Registros'
+            };
+            
+            const headerTitle = document.querySelector('.section-title strong');
+            if (headerTitle) {
+                headerTitle.textContent = sectionNames[sectionName] || 'Gestión de Clanes';
+            }
+        }
+
+        // Navigation arrows
+        function previousSection() {
+            const sections = ['clanes', 'puntos', 'usuarios', 'salas', 'podium', 'galeria', 'streamers', 'solicitudes', 'solicitudes-clan'];
+            const activeTab = document.querySelector('.nav-tab.active');
+            const currentSection = activeTab ? activeTab.dataset.section : 'clanes';
+            const currentIndex = sections.indexOf(currentSection);
+            const previousIndex = currentIndex > 0 ? currentIndex - 1 : sections.length - 1;
+            showSection(sections[previousIndex]);
+        }
+
+        function nextSection() {
+            const sections = ['clanes', 'puntos', 'usuarios', 'salas', 'podium', 'galeria', 'streamers', 'solicitudes', 'solicitudes-clan'];
+            const activeTab = document.querySelector('.nav-tab.active');
+            const currentSection = activeTab ? activeTab.dataset.section : 'clanes';
+            const currentIndex = sections.indexOf(currentSection);
+            const nextIndex = currentIndex < sections.length - 1 ? currentIndex + 1 : 0;
+            showSection(sections[nextIndex]);
+        }
+
+        // Legacy function compatibility
+        function showTab(tabName) {
+            showSection(tabName);
+        }
+
+        // Load admin data
+        function loadAdminData() {
+            // This would normally fetch data from your server
+            console.log('Loading admin data...');
+            
+            // You can add real data loading here
+            // For now, we're showing sample data in the HTML
+        }
+
+        // Export users function
+        function exportUsers() {
+            // This would normally export user data
+            alert('Función de exportación en desarrollo');
+        }
+
+        // Admin logout
+        function adminLogout() {
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('adminLogin').style.display = 'block';
+            document.getElementById('adminAuthForm').reset();
+        }
+
+        // Store user registrations (this would normally go to a database)
+        function addUserRegistration(userData) {
+            // Add to users table
+            const table = document.getElementById('usuariosTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            
+            newRow.innerHTML = `
+                <td>${'00' + (table.rows.length + 1)}</td>
+                <td>${userData.usuario}</td>
+                <td>${userData.email}</td>
+                <td>${userData.fechaRegistro}</td>
+                <td><span class="status active">Activo</span></td>
+                <td>
+                    <button class="btn-small edit">Editar</button>
+                    <button class="btn-small delete">Eliminar</button>
+                </td>
+            `;
+        }
+
+        // Store login attempts
+        function addLoginAttempt(loginData) {
+            const table = document.getElementById('loginsTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow(0); // Insert at top
+            
+            newRow.innerHTML = `
+                <td>${new Date().toLocaleString('es-ES')}</td>
+                <td>${loginData.username}</td>
+                <td>192.168.1.${Math.floor(Math.random() * 255)}</td>
+                <td><span class="status ${loginData.success ? 'success' : 'error'}">${loginData.success ? 'Exitoso' : 'Fallido'}</span></td>
+                <td>Windows Chrome</td>
+            `;
+        }
+
+        // Funciones para gestión de contenido
+        function initializeAdminForms() {
+            // Formulario de Salas
+            document.getElementById('salasForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const salaData = {
+                    id: Date.now(),
+                    nombre: document.getElementById('salaNombre').value,
+                    descripcion: document.getElementById('salaDescripcion').value,
+                    juego: document.getElementById('salaJuego').value,
+                    maxJugadores: document.getElementById('salaMaxJugadores').value,
+                    fecha: new Date().toLocaleString('es-ES')
+                };
+                
+                let salas = JSON.parse(localStorage.getItem('salas') || '[]');
+                salas.push(salaData);
+                localStorage.setItem('salas', JSON.stringify(salas));
+                
+                document.getElementById('salasForm').reset();
+                loadSalas();
+                alert('Sala creada exitosamente');
+            });
+
+            // Formulario de Podium
+            document.getElementById('podiumForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const podiumData = {
+                    id: Date.now(),
+                    jugador: document.getElementById('podiumJugador').value,
+                    posicion: document.getElementById('podiumPosicion').value,
+                    torneo: document.getElementById('podiumTorneo').value,
+                    puntos: document.getElementById('podiumPuntos').value,
+                    fecha: document.getElementById('podiumFecha').value
+                };
+                
+                let podium = JSON.parse(localStorage.getItem('podium') || '[]');
+                podium.push(podiumData);
+                localStorage.setItem('podium', JSON.stringify(podium));
+                
+                document.getElementById('podiumForm').reset();
+                loadPodium();
+                alert('Entrada agregada al podium exitosamente');
+            });
+
+            // Formulario de Galería
+            document.getElementById('galeriaForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const galeriaData = {
+                    id: Date.now(),
+                    titulo: document.getElementById('galeriaTitulo').value,
+                    descripcion: document.getElementById('galeriaDescripcion').value,
+                    categoria: document.getElementById('galeriaCategoria').value,
+                    url: document.getElementById('galeriaURL').value,
+                    tipo: document.getElementById('galeriaTipo').value,
+                    fecha: new Date().toLocaleString('es-ES')
+                };
+                
+                let galeria = JSON.parse(localStorage.getItem('galeria') || '[]');
+                galeria.push(galeriaData);
+                localStorage.setItem('galeria', JSON.stringify(galeria));
+                
+                document.getElementById('galeriaForm').reset();
+                loadGaleria();
+                alert('Contenido agregado a la galería exitosamente');
+            });
+
+            // Formulario de Streamers
+            document.getElementById('streamersForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const streamerData = {
+                    id: Date.now(),
+                    nombre: document.getElementById('streamerNombre').value,
+                    descripcion: document.getElementById('streamerDescripcion').value,
+                    plataforma: document.getElementById('streamerPlataforma').value,
+                    url: document.getElementById('streamerURL').value,
+                    horario: document.getElementById('streamerHorario').value,
+                    avatar: document.getElementById('streamerAvatar').value,
+                    fecha: new Date().toLocaleString('es-ES')
+                };
+                
+                let streamers = JSON.parse(localStorage.getItem('streamers') || '[]');
+                streamers.push(streamerData);
+                localStorage.setItem('streamers', JSON.stringify(streamers));
+                
+                document.getElementById('streamersForm').reset();
+                loadStreamers();
+                alert('Streamer agregado exitosamente');
+            });
+
+            // Formulario de Clanes
+            document.getElementById('clanesForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const clanData = {
+                    id: Date.now(),
+                    nombre: document.getElementById('clanNombre').value,
+                    tag: document.getElementById('clanTag').value,
+                    lider: document.getElementById('clanLider').value,
+                    descripcion: document.getElementById('clanDescripcion').value,
+                    logo: document.getElementById('clanLogo').value,
+                    tipo: document.getElementById('clanTipo').value,
+                    maxMiembros: document.getElementById('clanMaxMiembros').value,
+                    miembrosActuales: 1, // Empezar con el líder
+                    fechaCreacion: new Date().toLocaleString('es-ES')
+                };
+                
+                let clanes = JSON.parse(localStorage.getItem('clanes') || '[]');
+                clanes.push(clanData);
+                localStorage.setItem('clanes', JSON.stringify(clanes));
+                
+                document.getElementById('clanesForm').reset();
+                loadClanes();
+                alert('Clan creado exitosamente');
+            });
+
+            // Formulario de Rankings
+            document.getElementById('rankingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const rankingData = {
+                    id: Date.now(),
+                    jugador: document.getElementById('rankingJugador').value,
+                    puntos: parseInt(document.getElementById('rankingPuntos').value),
+                    kd: parseFloat(document.getElementById('rankingKD').value),
+                    nivel: document.getElementById('rankingNivel').value,
+                    partidas: parseInt(document.getElementById('rankingPartidas').value),
+                    victorias: parseInt(document.getElementById('rankingVictorias').value),
+                    clan: document.getElementById('rankingClan').value || 'Sin Clan',
+                    winRate: ((parseInt(document.getElementById('rankingVictorias').value) / parseInt(document.getElementById('rankingPartidas').value)) * 100).toFixed(1),
+                    fechaActualizacion: new Date().toLocaleString('es-ES')
+                };
+                
+                let rankings = JSON.parse(localStorage.getItem('rankings') || '[]');
+                
+                // Verificar si el jugador ya existe y actualizar
+                const existingIndex = rankings.findIndex(r => r.jugador === rankingData.jugador);
+                if (existingIndex !== -1) {
+                    rankings[existingIndex] = rankingData;
+                    alert('Ranking actualizado exitosamente');
+                } else {
+                    rankings.push(rankingData);
+                    alert('Jugador agregado al ranking exitosamente');
+                }
+                
+                localStorage.setItem('rankings', JSON.stringify(rankings));
+                
+                document.getElementById('rankingForm').reset();
+                loadRankings();
+            });
+
+            // Cargar contenido existente
+            loadSalas();
+            loadPodium();
+            loadGaleria();
+            loadStreamers();
+            loadClanes();
+            loadRankings();
+            loadSolicitudesClan();
+        }
+
+        function loadSalas() {
+            const salas = JSON.parse(localStorage.getItem('salas') || '[]');
+            const salasList = document.getElementById('salasList');
+            
+            salasList.innerHTML = salas.map(sala => `
+                <div class="content-item">
+                    <h5>${sala.nombre}</h5>
+                    <p><strong>Juego:</strong> ${sala.juego}</p>
+                    <p><strong>Descripción:</strong> ${sala.descripcion}</p>
+                    <p><strong>Máx. Jugadores:</strong> ${sala.maxJugadores}</p>
+                    <p><strong>Creada:</strong> ${sala.fecha}</p>
+                    <button class="delete-btn" onclick="deleteSala(${sala.id})">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        function loadPodium() {
+            const podium = JSON.parse(localStorage.getItem('podium') || '[]');
+            const podiumList = document.getElementById('podiumList');
+            
+            podiumList.innerHTML = podium.map(item => `
+                <div class="content-item">
+                    <h5>${item.posicion === '1' ? '🥇' : item.posicion === '2' ? '🥈' : '🥉'} ${item.jugador}</h5>
+                    <p><strong>Torneo:</strong> ${item.torneo}</p>
+                    <p><strong>Puntos:</strong> ${item.puntos}</p>
+                    <p><strong>Fecha:</strong> ${item.fecha}</p>
+                    <button class="delete-btn" onclick="deletePodium(${item.id})">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        function loadGaleria() {
+            const galeria = JSON.parse(localStorage.getItem('galeria') || '[]');
+            const galeriaList = document.getElementById('galeriaList');
+            
+            galeriaList.innerHTML = galeria.map(item => `
+                <div class="content-item">
+                    <h5>${item.titulo}</h5>
+                    <p><strong>Categoría:</strong> ${item.categoria}</p>
+                    <p><strong>Tipo:</strong> ${item.tipo}</p>
+                    <p><strong>Descripción:</strong> ${item.descripcion}</p>
+                    <p><strong>URL:</strong> <a href="${item.url}" target="_blank" style="color: #4caf50;">${item.url}</a></p>
+                    <p><strong>Agregado:</strong> ${item.fecha}</p>
+                    <button class="delete-btn" onclick="deleteGaleria(${item.id})">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        function loadStreamers() {
+            const streamers = JSON.parse(localStorage.getItem('streamers') || '[]');
+            const streamersList = document.getElementById('streamersList');
+            
+            streamersList.innerHTML = streamers.map(streamer => `
+                <div class="content-item">
+                    <h5>${streamer.nombre}</h5>
+                    <p><strong>Plataforma:</strong> ${streamer.plataforma}</p>
+                    <p><strong>Descripción:</strong> ${streamer.descripcion}</p>
+                    <p><strong>Horario:</strong> ${streamer.horario}</p>
+                    <p><strong>Canal:</strong> <a href="${streamer.url}" target="_blank" style="color: #4caf50;">${streamer.url}</a></p>
+                    <p><strong>Agregado:</strong> ${streamer.fecha}</p>
+                    <button class="delete-btn" onclick="deleteStreamer(${streamer.id})">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        function loadClanes() {
+            const clanes = JSON.parse(localStorage.getItem('clanes') || '[]');
+            const clanesList = document.getElementById('clanesList');
+            
+            clanesList.innerHTML = clanes.map(clan => `
+                <div class="content-item">
+                    <h5>${clan.tag} ${clan.nombre}</h5>
+                    <p><strong>Líder:</strong> ${clan.lider}</p>
+                    <p><strong>Tipo:</strong> ${clan.tipo}</p>
+                    <p><strong>Descripción:</strong> ${clan.descripcion}</p>
+                    <p><strong>Miembros:</strong> ${clan.miembrosActuales}/${clan.maxMiembros}</p>
+                    <p><strong>Creado:</strong> ${clan.fechaCreacion}</p>
+                    ${clan.logo ? `<p><strong>Logo:</strong> <a href="${clan.logo}" target="_blank" style="color: #4caf50;">Ver Logo</a></p>` : ''}
+                    <button class="delete-btn" onclick="deleteClan(${clan.id})">Eliminar</button>
+                </div>
+            `).join('');
+            
+            // Actualizar contador de stats
+            const clanesCounter = document.querySelector('.stat-card:first-child .stat-number');
+            if (clanesCounter) clanesCounter.textContent = clanes.length;
+        }
+
+        function loadRankings() {
+            const rankings = JSON.parse(localStorage.getItem('rankings') || '[]');
+            const rankingList = document.getElementById('rankingList');
+            
+            // Ordenar por puntos descendente
+            const rankingsOrdenados = rankings.sort((a, b) => b.puntos - a.puntos);
+            
+            rankingList.innerHTML = rankingsOrdenados.map((jugador, index) => `
+                <div class="content-item">
+                    <h5>#${index + 1} ${jugador.jugador}</h5>
+                    <p><strong>Puntos:</strong> ${jugador.puntos.toLocaleString()}</p>
+                    <p><strong>Nivel:</strong> ${jugador.nivel}</p>
+                    <p><strong>K/D:</strong> ${jugador.kd}</p>
+                    <p><strong>Partidas:</strong> ${jugador.partidas} | <strong>Victorias:</strong> ${jugador.victorias}</p>
+                    <p><strong>Win Rate:</strong> ${jugador.winRate}%</p>
+                    <p><strong>Clan:</strong> ${jugador.clan}</p>
+                    <p><strong>Actualizado:</strong> ${jugador.fechaActualizacion}</p>
+                    <button class="delete-btn" onclick="deleteRanking(${jugador.id})">Eliminar</button>
+                </div>
+            `).join('');
+        }
+
+        // Funciones para gestión de solicitudes de clanes
+        let currentFilter = 'all';
+
+        function loadSolicitudesClan() {
+            const solicitudes = JSON.parse(localStorage.getItem('solicitudesClan') || '[]');
+            displaySolicitudes(solicitudes);
+            updateSolicitudesStats(solicitudes);
+        }
+
+        function displaySolicitudes(solicitudes) {
+            const filteredSolicitudes = currentFilter === 'all' ? 
+                solicitudes : solicitudes.filter(s => s.estado === currentFilter);
+            
+            const solicitudesList = document.getElementById('solicitudesClanList');
+            
+            if (filteredSolicitudes.length === 0) {
+                solicitudesList.innerHTML = '<p class="no-content">No hay solicitudes en esta categoría.</p>';
+                return;
+            }
+            
+            solicitudesList.innerHTML = filteredSolicitudes.map(solicitud => `
+                <div class="solicitud-item" data-status="${solicitud.estado}">
+                    <div class="solicitud-header">
+                        <div class="solicitud-title">${solicitud.tag} ${solicitud.nombre}</div>
+                        <div class="solicitud-status ${solicitud.estado}">${solicitud.estado.toUpperCase()}</div>
+                    </div>
+                    
+                    <div class="solicitud-details">
+                        <div class="solicitud-field">
+                            <strong>Líder:</strong>
+                            ${solicitud.lider}
+                        </div>
+                        <div class="solicitud-field">
+                            <strong>Tipo:</strong>
+                            ${solicitud.tipo}
+                        </div>
+                        <div class="solicitud-field">
+                            <strong>Máx. Miembros:</strong>
+                            ${solicitud.maxMiembros}
+                        </div>
+                        <div class="solicitud-field">
+                            <strong>Solicitante:</strong>
+                            ${solicitud.solicitante}
+                        </div>
+                        <div class="solicitud-field">
+                            <strong>Contacto:</strong>
+                            ${solicitud.contacto}
+                        </div>
+                        <div class="solicitud-field">
+                            <strong>Fecha:</strong>
+                            ${solicitud.fechaSolicitud}
+                        </div>
+                    </div>
+                    
+                    <div class="solicitud-field" style="grid-column: 1 / -1;">
+                        <strong>Descripción:</strong>
+                        ${solicitud.descripcion}
+                    </div>
+                    
+                    ${solicitud.logo ? `
+                        <div class="solicitud-field" style="grid-column: 1 / -1;">
+                            <strong>Logo:</strong>
+                            <a href="${solicitud.logo}" target="_blank" style="color: #4caf50;">Ver Logo</a>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="solicitud-actions">
+                        ${solicitud.estado === 'pendiente' ? `
+                            <button class="btn-aprobar" onclick="aprobarSolicitud(${solicitud.id})">
+                                ✅ Aprobar
+                            </button>
+                            <button class="btn-rechazar" onclick="rechazarSolicitud(${solicitud.id})">
+                                ❌ Rechazar
+                            </button>
+                        ` : ''}
+                        <button class="btn-eliminar-solicitud" onclick="eliminarSolicitud(${solicitud.id})">
+                            🗑️ Eliminar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateSolicitudesStats(solicitudes) {
+            const pendientes = solicitudes.filter(s => s.estado === 'pendiente').length;
+            const aprobadas = solicitudes.filter(s => s.estado === 'aprobada').length;
+            const rechazadas = solicitudes.filter(s => s.estado === 'rechazada').length;
+            
+            document.getElementById('pendientes-count').textContent = pendientes;
+            document.getElementById('aprobadas-count').textContent = aprobadas;
+            document.getElementById('rechazadas-count').textContent = rechazadas;
+        }
+
+        function filterSolicitudes(filter) {
+            currentFilter = filter;
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Recargar solicitudes con el filtro
+            loadSolicitudesClan();
+        }
+
+        function aprobarSolicitud(id) {
+            if (confirm('¿Estás seguro de aprobar esta solicitud de clan?')) {
+                let solicitudes = JSON.parse(localStorage.getItem('solicitudesClan') || '[]');
+                const solicitud = solicitudes.find(s => s.id === id);
+                
+                if (solicitud) {
+                    // Cambiar estado a aprobada
+                    solicitud.estado = 'aprobada';
+                    solicitud.fechaAprobacion = new Date().toLocaleString('es-ES');
+                    
+                    // Crear el clan automáticamente
+                    const nuevoClan = {
+                        id: Date.now(),
+                        nombre: solicitud.nombre,
+                        tag: solicitud.tag,
+                        lider: solicitud.lider,
+                        descripcion: solicitud.descripcion,
+                        logo: solicitud.logo,
+                        tipo: solicitud.tipo,
+                        maxMiembros: solicitud.maxMiembros,
+                        miembrosActuales: 1,
+                        fechaCreacion: new Date().toLocaleString('es-ES'),
+                        origen: 'solicitud_aprobada'
+                    };
+                    
+                    let clanes = JSON.parse(localStorage.getItem('clanes') || '[]');
+                    clanes.push(nuevoClan);
+                    localStorage.setItem('clanes', JSON.stringify(clanes));
+                    
+                    // Guardar cambios en solicitudes
+                    localStorage.setItem('solicitudesClan', JSON.stringify(solicitudes));
+                    
+                    // Recargar vistas
+                    loadSolicitudesClan();
+                    loadClanes();
+                    
+                    alert('Solicitud aprobada y clan creado exitosamente');
+                }
+            }
+        }
+
+        function rechazarSolicitud(id) {
+            const motivo = prompt('Ingresa el motivo del rechazo (opcional):');
+            
+            if (confirm('¿Estás seguro de rechazar esta solicitud de clan?')) {
+                let solicitudes = JSON.parse(localStorage.getItem('solicitudesClan') || '[]');
+                const solicitud = solicitudes.find(s => s.id === id);
+                
+                if (solicitud) {
+                    solicitud.estado = 'rechazada';
+                    solicitud.fechaRechazo = new Date().toLocaleString('es-ES');
+                    solicitud.motivoRechazo = motivo || 'Sin motivo especificado';
+                    
+                    localStorage.setItem('solicitudesClan', JSON.stringify(solicitudes));
+                    loadSolicitudesClan();
+                    
+                    alert('Solicitud rechazada');
+                }
+            }
+        }
+
+        function eliminarSolicitud(id) {
+            if (confirm('¿Estás seguro de eliminar esta solicitud permanentemente?')) {
+                let solicitudes = JSON.parse(localStorage.getItem('solicitudesClan') || '[]');
+                solicitudes = solicitudes.filter(s => s.id !== id);
+                localStorage.setItem('solicitudesClan', JSON.stringify(solicitudes));
+                loadSolicitudesClan();
+                alert('Solicitud eliminada');
+            }
+        }
+
+        // Funciones para eliminar contenido
+        function deleteSala(id) {
+            if (confirm('¿Estás seguro de eliminar esta sala?')) {
+                let salas = JSON.parse(localStorage.getItem('salas') || '[]');
+                salas = salas.filter(sala => sala.id !== id);
+                localStorage.setItem('salas', JSON.stringify(salas));
+                loadSalas();
+            }
+        }
+
+        function deletePodium(id) {
+            if (confirm('¿Estás seguro de eliminar esta entrada del podium?')) {
+                let podium = JSON.parse(localStorage.getItem('podium') || '[]');
+                podium = podium.filter(item => item.id !== id);
+                localStorage.setItem('podium', JSON.stringify(podium));
+                loadPodium();
+            }
+        }
+
+        function deleteGaleria(id) {
+            if (confirm('¿Estás seguro de eliminar este contenido de la galería?')) {
+                let galeria = JSON.parse(localStorage.getItem('galeria') || '[]');
+                galeria = galeria.filter(item => item.id !== id);
+                localStorage.setItem('galeria', JSON.stringify(galeria));
+                loadGaleria();
+            }
+        }
+
+        function deleteStreamer(id) {
+            if (confirm('¿Estás seguro de eliminar este streamer?')) {
+                let streamers = JSON.parse(localStorage.getItem('streamers') || '[]');
+                streamers = streamers.filter(streamer => streamer.id !== id);
+                localStorage.setItem('streamers', JSON.stringify(streamers));
+                loadStreamers();
+            }
+        }
+
+        function deleteClan(id) {
+            if (confirm('¿Estás seguro de eliminar este clan?')) {
+                let clanes = JSON.parse(localStorage.getItem('clanes') || '[]');
+                clanes = clanes.filter(clan => clan.id !== id);
+                localStorage.setItem('clanes', JSON.stringify(clanes));
+                loadClanes();
+            }
+        }
+
+        function deleteRanking(id) {
+            if (confirm('¿Estás seguro de eliminar este jugador del ranking?')) {
+                let rankings = JSON.parse(localStorage.getItem('rankings') || '[]');
+                rankings = rankings.filter(ranking => ranking.id !== id);
+                localStorage.setItem('rankings', JSON.stringify(rankings));
+                loadRankings();
+            }
+        }
+
+        // Inicializar cuando la página carga
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAdminForms();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - El Continental</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="session.js"></script>
+</head>
+<body>
+    <header>
+        <div class="auth-buttons">
+            <a href="login.html" class="btn-auth btn-login">Iniciar Sesión</a>
+            <a href="registro.html" class="btn-auth btn-register">Registrarse</a>
+        </div>
+        <div class="logo-container">
+            <div class="logo-background"></div>
+            <img src="assets/logo de pagina .jpg" alt="Logo El Continental" class="logo">
+            <div class="logo-ring"></div>
+            <div class="logo-particles"></div>
+        </div>
+        <h1>El Continental</h1>
+        <p class="subtitle">Registro de Usuario</p>
+    </header>
+    
+    <nav class="navbar">
+        <div class="navbar-container">
+            <button class="navbar-toggle" id="navbar-toggle">
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+            </button>
+            <ul class="navbar-menu" id="navbar-menu">
+                <li class="navbar-item">
+                    <a href="podium.html" class="navbar-link">
+                        <span class="navbar-icon">🏆</span>
+                        Podium
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="ranking.html" class="navbar-link">
+                        <span class="navbar-icon">📊</span>
+                        Ranking
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="clanes.html" class="navbar-link">
+                        <span class="navbar-icon">⚔️</span>
+                        Clanes
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="salas.html" class="navbar-link">
+                        <span class="navbar-icon">🎮</span>
+                        Salas
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="perfil.html" class="navbar-link">
+                        <span class="navbar-icon">👤</span>
+                        Perfil
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <section class="page-content">
+            <div class="auth-container">
+                <h2>📝 Crear Nueva Cuenta</h2>
+                <form class="auth-form" id="registroForm">
+                    <div class="form-group">
+                        <label for="usuario">Usuario:</label>
+                        <input type="text" id="usuario" name="usuario" required placeholder="Elige tu nombre de usuario">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico:</label>
+                        <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contrasena">Contraseña:</label>
+                        <input type="password" id="contrasena" name="contrasena" required placeholder="Crea una contraseña segura">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmarContrasena">Confirmar Contraseña:</label>
+                        <input type="password" id="confirmarContrasena" name="confirmarContrasena" required placeholder="Confirma tu contraseña">
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="terminos" name="terminos" required>
+                        <label for="terminos">Acepto los términos y condiciones</label>
+                    </div>
+                    
+                    <button type="submit" class="btn auth-submit-btn">Crear Cuenta</button>
+                    
+                    <div class="auth-links">
+                        <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></p>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="back-home-container">
+                <a href="index.html" class="btn back-home-btn">🏠 Volver al Inicio</a>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 El Continental. No oficial de Call of Duty Mobile.</p>
+    </footer>
+
+    <script>
+        const navbarToggle = document.getElementById('navbar-toggle');
+        const navbarMenu = document.getElementById('navbar-menu');
+        
+        navbarToggle.addEventListener('click', () => {
+            navbarToggle.classList.toggle('active');
+            navbarMenu.classList.toggle('active');
+        });
+        
+        const navbarLinks = document.querySelectorAll('.navbar-link');
+        navbarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            });
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!navbarToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            }
+        });
+
+        // Handle registration form submission
+        document.getElementById('registroForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const usuario = document.getElementById('usuario').value;
+            const email = document.getElementById('email').value;
+            const contrasena = document.getElementById('contrasena').value;
+            const confirmarContrasena = document.getElementById('confirmarContrasena').value;
+            const terminos = document.getElementById('terminos').checked;
+            
+            // Validate passwords match
+            if (contrasena !== confirmarContrasena) {
+                alert('Las contraseñas no coinciden. Por favor, verifica.');
+                return;
+            }
+            
+            if (!terminos) {
+                alert('Debes aceptar los términos y condiciones.');
+                return;
+            }
+            
+            // Register user using session system
+            const userData = {
+                usuario: usuario,
+                email: email,
+                contrasena: contrasena,
+                fechaRegistro: new Date().toLocaleString('es-ES')
+            };
+            
+            if (registerUser(userData)) {
+                alert('¡Registro exitoso! Bienvenido ' + usuario);
+                window.location.href = 'index.html';
+            } else {
+                alert('Error en el registro. Por favor, inténtalo de nuevo.');
+            }
+        });
+
+        // Check if user is already logged in
+        window.addEventListener('load', function() {
+            if (isUserLoggedIn()) {
+                // User is already logged in, redirect to main page
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

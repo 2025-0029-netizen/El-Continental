@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Continental - Comunidad Call of Duty Mobile</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="session.js"></script>
+    <script src="content-loader.js"></script>
+</head>
+<body>
+    <header>
+        <div class="auth-buttons">
+            <a href="login.html" class="btn-auth btn-login">Iniciar Sesión</a>
+            <a href="registro.html" class="btn-auth btn-register">Registrarse</a>
+        </div>
+        <div class="logo-container">
+            <div class="logo-background"></div>
+            <img src="assets/logo de pagina .jpg" alt="Logo El Continental" class="logo">
+            <div class="logo-ring"></div>
+            <div class="logo-particles"></div>
+        </div>
+        <h1>El Continental</h1>
+        <p class="subtitle">Comunidad de Call of Duty Mobile</p>
+    </header>
+    
+    <!-- Navbar responsivo -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <button class="navbar-toggle" id="navbar-toggle">
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+            </button>
+            <ul class="navbar-menu" id="navbar-menu">
+                <li class="navbar-item">
+                    <a href="podium.html" class="navbar-link">
+                        <span class="navbar-icon">🏆</span>
+                        Podium
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="ranking.html" class="navbar-link">
+                        <span class="navbar-icon">📊</span>
+                        Ranking
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="clanes.html" class="navbar-link">
+                        <span class="navbar-icon">⚔️</span>
+                        Clanes
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="salas.html" class="navbar-link">
+                        <span class="navbar-icon">🎮</span>
+                        Salas
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="perfil.html" class="navbar-link">
+                        <span class="navbar-icon">👤</span>
+                        Perfil
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <section class="hero">
+            <h2>¡Bienvenido a la comunidad!</h2>
+            <p>Únete a jugadores apasionados de Call of Duty Mobile. Noticias, eventos, y más.</p>
+        </section>
+
+        <!-- Apartado Clanes -->
+        <section class="clanes">
+            <h2>Clanes</h2>
+            <p>Descubre y únete a clanes de la comunidad.</p>
+            <a href="clanes.html" class="section-btn">Ver Clanes</a>
+            <a href="registrar-clan.html" class="section-btn">Registrar Clan</a>
+        </section>
+
+        <!-- Apartado Salas -->
+        <section class="salas">
+            <h2>Salas</h2>
+            <p>Explora las salas activas y participa en partidas.</p>
+            <a href="salas.html" class="btn">Ver más</a>
+        </section>
+
+        <!-- Apartado Galería -->
+        <section class="galeria">
+            <h2>Galería</h2>
+            <div class="galeria-cajas">
+                <a href="galeria-amateur.html" class="galeria-caja">Galería Amateur</a>
+                <a href="galeria-competitivo.html" class="galeria-caja">Galería Competitivo</a>
+            </div>
+        </section>
+
+        <!-- Apartado Sugerencias -->
+        <section class="sugerencias">
+            <h2>Sugerencias</h2>
+            <form class="form-sugerencia">
+                <textarea placeholder="Escribe tu sugerencia aquí..."></textarea>
+                <button type="submit" class="btn">Enviar</button>
+            </form>
+        </section>
+
+        <!-- Apartado Donar -->
+        <section class="donar">
+            <h2>Donar</h2>
+            <p>Apoya a la comunidad con tu donación.</p>
+            <button class="btn">Donar</button>
+        </section>
+
+        <!-- Apartado Streamer -->
+        <section class="streamer">
+            <h2>Información del Streamer</h2>
+            <p>Conoce a nuestro streamer destacado y síguelo en sus redes.</p>
+            <a href="info-streamer.html" class="btn">Ver información</a>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 El Continental. No oficial de Call of Duty Mobile.</p>
+    </footer>
+
+    <script>
+        // Funcionalidad del navbar móvil
+        const navbarToggle = document.getElementById('navbar-toggle');
+        const navbarMenu = document.getElementById('navbar-menu');
+        
+        navbarToggle.addEventListener('click', () => {
+            navbarToggle.classList.toggle('active');
+            navbarMenu.classList.toggle('active');
+        });
+        
+        // Cerrar menú al hacer click en un enlace
+        const navbarLinks = document.querySelectorAll('.navbar-link');
+        navbarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            });
+        });
+        
+        // Cerrar menú al hacer click fuera de él
+        document.addEventListener('click', (e) => {
+            if (!navbarToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

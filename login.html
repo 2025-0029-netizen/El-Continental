@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - El Continental</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="session.js"></script>
+</head>
+<body>
+    <header>
+        <div class="auth-buttons">
+            <a href="login.html" class="btn-auth btn-login">Iniciar Sesión</a>
+            <a href="registro.html" class="btn-auth btn-register">Registrarse</a>
+        </div>
+        <div class="logo-container">
+            <div class="logo-background"></div>
+            <img src="assets/logo de pagina .jpg" alt="Logo El Continental" class="logo">
+            <div class="logo-ring"></div>
+            <div class="logo-particles"></div>
+        </div>
+        <h1>El Continental</h1>
+        <p class="subtitle">Iniciar Sesión</p>
+    </header>
+    
+    <nav class="navbar">
+        <div class="navbar-container">
+            <button class="navbar-toggle" id="navbar-toggle">
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+                <span class="navbar-toggle-icon"></span>
+            </button>
+            <ul class="navbar-menu" id="navbar-menu">
+                <li class="navbar-item">
+                    <a href="podium.html" class="navbar-link">
+                        <span class="navbar-icon">🏆</span>
+                        Podium
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="ranking.html" class="navbar-link">
+                        <span class="navbar-icon">📊</span>
+                        Ranking
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="clanes.html" class="navbar-link">
+                        <span class="navbar-icon">⚔️</span>
+                        Clanes
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="salas.html" class="navbar-link">
+                        <span class="navbar-icon">🎮</span>
+                        Salas
+                    </a>
+                </li>
+                <li class="navbar-item">
+                    <a href="perfil.html" class="navbar-link">
+                        <span class="navbar-icon">👤</span>
+                        Perfil
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <section class="page-content">
+            <div class="form-container">
+                <h2>🔐 Iniciar Sesión</h2>
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUser">Usuario:</label>
+                        <input type="text" id="loginUser" name="usuario" required placeholder="Ingresa tu usuario">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña:</label>
+                        <input type="password" id="loginPassword" name="password" required placeholder="Ingresa tu contraseña">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                        <a href="registro.html" class="btn btn-secondary">¿No tienes cuenta? Regístrate</a>
+                    </div>
+                </form>
+                
+                <div class="back-home-container">
+                    <a href="index.html" class="btn back-home-btn">🏠 Volver al Inicio</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 El Continental. No oficial de Call of Duty Mobile.</p>
+    </footer>
+
+    <script>
+        const navbarToggle = document.getElementById('navbar-toggle');
+        const navbarMenu = document.getElementById('navbar-menu');
+        
+        navbarToggle.addEventListener('click', () => {
+            navbarToggle.classList.toggle('active');
+            navbarMenu.classList.toggle('active');
+        });
+        
+        const navbarLinks = document.querySelectorAll('.navbar-link');
+        navbarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            });
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!navbarToggle.contains(e.target) && !navbarMenu.contains(e.target)) {
+                navbarToggle.classList.remove('active');
+                navbarMenu.classList.remove('active');
+            }
+        });
+
+        // Login form handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUser').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (loginUser(username, password)) {
+                if (username === 'admin' && password === 'admin123') {
+                    alert('¡Bienvenido Administrador! Tendrás acceso al Panel de Administración.');
+                } else {
+                    alert('¡Inicio de sesión exitoso! Bienvenido ' + username);
+                }
+                window.location.href = 'index.html';
+            } else {
+                alert('Por favor completa todos los campos.');
+            }
+        });
+
+        // Check if user is already logged in when page loads
+        window.addEventListener('load', function() {
+            if (isUserLoggedIn()) {
+                // User is already logged in, redirect to main page
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
